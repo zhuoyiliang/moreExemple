@@ -1,66 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch API with Cache: no-store and Query Parameters</title>
     <style>
-        .container {
-            box-sizing: border-box;
+        /* body{
+            margin: 0;
+            padding: 0;
+        } */
+        #imageContainer {
             width: fit-content;
             height: fit-content;
-            border: 1px solid #000;
-            margin: 10px;
+            display: none;
+            border: 1px solid #ccc;
+            position: relative;
+            /* box-sizing: border-box; */
         }
 
-        .container img {
-            box-sizing: border-box; 
-            width: 100%;
-            height: auto;
-            max-width: 500px;
-            max-height: 500px;
+        #imagePreview {
+            max-width: 400px;
+            max-height: 400px;
             object-fit: contain;
             display: block;
         }
 
-        .draft {
-            box-sizing: border-box;
-            width: 80px;
-            height: 80px;
+        #draggableSquare {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0);
+            border: 2px dashed #4a90e2;
             position: absolute;
+            cursor: drag;
             top: 0;
-            left: 0;
-            pointer-events: none;
+            /* left: 0; */
+            right: 0;
+            box-sizing: border-box;
+        }
+
+        canvas {
+            border: 1px solid black;
+            max-width: 400px;
         }
     </style>
-    <title>Image Container</title>
 </head>
-<body>
-    <input type="file" id="fileInput">
-    <div class="container">
-        <div class="draft">
 
-        </div>
+<body>
+    <div id="imageContainer">
+        <img id="imagePreview" alt="Image Preview" />
+        <div id="draggableSquare"></div>
     </div>
-    <canvas id="drawing" width="500" height="500"></canvas>
+
+    <input type="file" id="fileInput" accept="image/*" />
+    <canvas id="outputCanvas" width="100" height="100"></canvas>
 
     <script>
-        const fileInput = document.getElementById('fileInput')
-        const container = document.querySelector('.container')
-        const drawing = document.getElementById('drawing')
-        const ctx = drawing.getContext('2d')
+        const fileInput = document.getElementById('fileInput');
+        const imageContainer = document.getElementById('imageContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        const draggableSquare = document.getElementById('draggableSquare');
+        const outputCanvas = document.getElementById('outputCanvas');
+        const context = outputCanvas.getContext('2d');
 
-        fileInput.addEventListener('change', (event) => {
-            const file = event.target.files[0]
-            const reader = new FileReader()
-            reader.onload = (e) => {
-                const img = new Image()
-                img.onload = () => {
-                    container.appendChild(img)
-                }
-                img.src = e.target.result
+        const square = draggableSquare
+        const container = imageContainer
+
+        let offsetX, offsetY;
+
+        let originalImageWidth, originalImageHeight;
+
+        imagePreview.addEventListener('load', function () {
+            originalImageWidth = imagePreview.naturalWidth;
+            originalImageHeight = imagePreview.naturalHeight;
+        });
+
+        fileInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            const imgURL = URL.createObjectURL(file);
+            imagePreview.src = imgURL;
+            imageContainer.style.display = 'block';
+        });
+
+        square.addEventListener('mousedown', function (e) {
+            // 计算偏移量
+            offsetX = e.clientX - square.getBoundingClientRect().left;
+            offsetY = e.clientY - square.getBoundingClientRect().top;
+            isDragging = true;
+
+            // 添加鼠标移动和鼠标释放事件
+            document.addEventListener('mousemove', moveSquare);
+            document.addEventListener('mouseup', stopMoving);
+        });
+
+        function moveSquare(e) {
+            if (!isDragging) return;
+            const containerRect = container.getBoundingClientRect();
+            // 计算新的位置
+            let newX = e.clientX - offsetX - containerRect.left;
+            let newY = e.clientY - offsetY - containerRect.top;
+            // 边界检查
+            if (newX < 0) newX = 0;
+            if (newY < 0) newY = 0;
+            if (newX > containerRect.width - square.offsetWidth - container.clientLeft * 2) {
+                newX = containerRect.width - square.offsetWidth - container.clientLeft * 2;
             }
-            reader.readAsDataURL(file)
-        })
+            if (newY > containerRect.height - square.offsetHeight - container.clientTop * 2) {
+                newY = containerRect.height - square.offsetHeight - container.clientTop * 2;
+            }
+
+            // 设置新的位置
+            square.style.left = newX + 'px';
+            square.style.top = newY + 'px';
+
+            // 在拖动过程中实时绘制到 canvas
+            drawToCanvas(newX, newY);
+        }
+
+        function stopMoving() {
+            isDragging = false;
+            document.removeEventListener('mousemove', moveSquare);
+            document.removeEventListener('mouseup', stopMoving);
+        }
+        
+        function drawToCanvas(newX, newY) {
+            const squareRect = draggableSquare.getBoundingClientRect();
+            const imageRect = imagePreview.getBoundingClientRect();
+
+            // 计算正方形的相对位置
+            const squareXRatio = (squareRect.left - imageRect.left) / imageRect.width * originalImageWidth;
+            const squareYRatio = (squareRect.top - imageRect.top) / imageRect.height * originalImageHeight;
+
+            // 确保不超出原始图像边界
+            const squareWidth = Math.min(draggableSquare.offsetWidth, originalImageWidth - squareXRatio);
+            const squareHeight = Math.min(draggableSquare.offsetHeight, originalImageHeight - squareYRatio);
+
+            // 在 canvas 中绘制图像的正方形部分
+            context.clearRect(0, 0, outputCanvas.width, outputCanvas.height); // 清空 canvas
+            context.drawImage(
+                imagePreview,
+                squareXRatio, // 使用比率计算位置
+                squareYRatio,
+                draggableSquare.offsetWidth / imageRect.width * originalImageWidth, // 使用宽度比率计算
+                draggableSquare.offsetHeight / imageRect.height * originalImageHeight, // 使用高度比率计算
+                0,
+                0,
+                outputCanvas.width,
+                outputCanvas.height
+            );
+        }
     </script>
 </body>
+
 </html>
