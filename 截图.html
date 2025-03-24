@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container {
+            box-sizing: border-box;
+            width: fit-content;
+            height: fit-content;
+            border: 1px solid #000;
+            margin: 10px;
+        }
+
+        .container img {
+            box-sizing: border-box; 
+            width: 100%;
+            height: auto;
+            max-width: 500px;
+            max-height: 500px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .draft {
+            box-sizing: border-box;
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+    </style>
+    <title>Image Container</title>
+</head>
+<body>
+    <input type="file" id="fileInput">
+    <div class="container">
+        <div class="draft">
+
+        </div>
+    </div>
+    <canvas id="drawing" width="500" height="500"></canvas>
+
+    <script>
+        const fileInput = document.getElementById('fileInput')
+        const container = document.querySelector('.container')
+        const drawing = document.getElementById('drawing')
+        const ctx = drawing.getContext('2d')
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0]
+            const reader = new FileReader()
+            reader.onload = (e) => {
+                const img = new Image()
+                img.onload = () => {
+                    container.appendChild(img)
+                }
+                img.src = e.target.result
+            }
+            reader.readAsDataURL(file)
+        })
+    </script>
+</body>
+</html>

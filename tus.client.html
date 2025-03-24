@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <input type="file" id="file-input" />
+        <button id="upload-btn">上传</button>
+        <button id="download-btn">下载</button>
+        <div
+            style="
+                box-sizing: border-box;
+                width: fit-content;
+                height: fit-content;
+                background: bisque;
+                font-weight: 700;
+                color: white;
+                background: #f0e5e5;
+                text-align: center;
+            "
+        >
+            <div id="time"></div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/tus-js-client@latest/dist/tus.js"></script>
+
+        <script>
+            const fileInput = document.getElementById("file-input");
+            const uploadBtn = document.getElementById("upload-btn");
+            const downloadBtn = document.getElementById("download-btn");
+            const timeSpan = document.getElementById("time");
+            let downFile = {};
+
+            uploadBtn.addEventListener("click", () => {
+                const file = fileInput.files[0];
+                if (!file) {
+                    alert("请选择文件");
+                    return;
+                }
+                const upload = new tus.Upload(file, {
+                    endpoint: "http://localhost:3000/uploads",
+                    metadata: {
+                        filename: file.name,
+                        filetype: file.type,
+                    },
+                    onSuccess: () => {
+                        console.log("上传成功");
+                        console.log("Download %s from %s", upload.file.name, upload.url);
+                        downFile = {
+                            name: upload.file.name,
+                            url: upload.url,
+                        };
+                    },
+                    onError: (error) => {
+                        console.log("上传失败", error);
+                    },
+                    onProgress: (bytesUploaded, bytesTotal) => {
+                        console.log("上传进度", bytesUploaded, bytesTotal);
+                    },
+                });
+                upload.start();
+            });
+
+            downloadBtn.addEventListener("click", () => {
+                fetch(downFile.url)
+                    .then((res) => res.blob())
+                    .then((blob) => {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = downFile.name;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                    });
+            });
+
+            let num = 0;
+            function change() {
+                timeSpan.style.visibility = "hidden";
+                timeSpan.textContent = `:55s`;
+                timeSpan.style.width = "auto";
+                timeSpan.style.width = "auto";
+                const { width, height } = timeSpan.getBoundingClientRect();
+                console.log(width);
+                timeSpan.textContent = "";
+                timeSpan.offsetHeight;
+                timeSpan.style.height = height + "px";
+                timeSpan.style.width = width + "px";
+                timeSpan.style.visibility = "visible";
+                timeSpan.style.padding = "6px";
+            }
+            change();
+            setInterval(() => {
+                timeSpan.textContent = `:${num % 60}s`;
+                num++;
+            }, 1000);
+        </script>
+    </body>
+</html>

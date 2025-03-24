@@ -1,0 +1,1 @@
+axios的responseType是配置项，用来指定服务器响应数据的类型，比如'json'、'text'、'arraybuffer'等。设置后，axios会自动将响应数据转换为对应的格式。而xhr.overrideMimeType是XHR对象的方法，用于覆盖服务器返回的MIME类型，影响浏览器对数据的解析方式

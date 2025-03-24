@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下载文件</title>
+</head>
+
+<body>
+    <button id="download-btn">下载文件</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        function downloadFile() {
+            axios({
+                url: 'http://localhost:3000/file1/t2.xlsx',
+                method: 'GET',
+                responseType: 'json'
+            })
+                .then((response) => {
+                    console.log(response.data.data.data);
+                    if (response.data.msg === '成功获取文件') {
+                        const uint8Array = new Uint8Array(response.data.data.data);
+                        const blob = new Blob([uint8Array]);
+                        const url = window.URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', 'NGINX_Cookbook_3e_F5.xlsx');
+                        document.body.appendChild(link);
+                        link.click();
+                        window.URL.revokeObjectURL(url);
+                        document.body.removeChild(link);
+                    } else {
+                        console.error('Failed to download file:', response.data.msg);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error downloading file:', error);
+                });
+        }
+
+        downloadFile();
+    </script>
+</body>
+
+</html>

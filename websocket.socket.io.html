@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="messageInput">
+    <button id="sendMessage">Send</button>
+    <script type="module">
+        import { io } from "https://cdn.socket.io/4.7.5/socket.io.esm.min.js";
+      
+        const socket = io("http://localhost:8082");
+        socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+        socket.on('disconnect', () => {
+            console.log('Disconnected from server');
+        });
+        socket.on('message', (message) => {
+            console.log('Message from server:', message);
+        });
+
+        const messageInput = document.getElementById('messageInput');
+        const sendMessage = document.getElementById('sendMessage');
+        sendMessage.addEventListener('click', () => {
+            const message = messageInput.value;
+            socket.emit('message', message);
+        });
+      </script>
+</body>
+</html>

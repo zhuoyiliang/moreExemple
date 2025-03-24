@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <div id="content"></div>
+        <div id="status" style="background-color: bisque;height: 10px;"></div>
+    </div>
+    <script>
+
+        fetch('http://localhost:3000/file/NGINX_Cookbook_3e_F5.pdf')
+            // .then(response => {
+            //     if (!response.ok) {
+            //         throw new Error('Network response was not ok');
+            //     }
+            //     const reader = response.body.getReader();
+
+            //     // 获取总的内容长度
+            //     const contentLength = response.headers.get('Content-Length');
+            //     let receivedLength = 0; // 目前已接收的字节数
+            //     const chunks = []; // 存储所有的字节
+
+            //     // 读取流
+            //     function read() {
+            //         return reader.read().then(({ done, value }) => {
+            //             if (done) {
+            //                 console.log("Stream finished.");
+            //                 return new Uint8Array(chunks); // 返回所有的字节作为一个 Uint8Array
+            //             }
+
+            //             chunks.push(value); // 存储读取的块
+            //             receivedLength += value.length; // 更新接收的字节数
+
+            //             console.log(`Received ${receivedLength} of ${contentLength}`); // 输出已接收数据的长度
+
+            //             return read(); // 继续读取下一个块
+            //         });
+            //     }
+
+            //     return read();
+            // })
+            .then(data => {
+                // data 是一个 Uint8Array，包含了完整的文件数据
+                console.log('Received all data:', data);
+
+                const blob = data.blob()
+                // console.log('Received all data:', blob);
+                return blob
+            })
+            // .then(blob => {
+            //     const blobUrl = window.URL.createObjectURL(blob);
+            //     const filename = 'xxx.pdf';
+            //     const a = document.createElement('a');
+            //     a.href = blobUrl;
+            //     a.download = filename;;
+            //     a.click();
+            //     window.URL.revokeObjectURL(url)
+            //     document.body.removeChild(a)
+            // })
+
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+
+
+        // fetch('http://localhost:3000/file1/NGINX_Cookbook_3e_F5.pdf')
+        //     .then(res => res.json())
+        //     .then(result => {
+        //         const { data: base64 } = result
+        //         console.log(base64)
+        //         // 将 Base64 字符串转换为二进制
+        //         const binaryString = atob(base64); // 解码 Base64
+        //         const len = binaryString.length;
+        //         const bytes = new Uint8Array(len);
+        //         for (let i = 0; i < len; i++) {
+        //             bytes[i] = binaryString.charCodeAt(i);
+        //         }
+        //         console.log('Received data:', bytes); // bytes 是一个 Uint8Array，包含了二进制数据
+        //         const blobUrl = window.URL.createObjectURL(new Blob([bytes]));
+        //         const filename = 'xxx1.pdf';
+        //         const a = document.createElement('a');
+        //         a.href = blobUrl;
+        //         a.download = filename;;
+        //         a.click();
+        //         window.URL.revokeObjectURL(blobUrl)
+        //         document.body.removeChild(a)
+        //     })
+
+        async function fetchAndPrintFile(url) {
+            const response = await fetch(`http://localhost:3000/${url}/test.txt`);
+            if (!response.ok) {
+                console.error('Network response was not ok:', response.statusText);
+                return;
+            }
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder(); // 用于解码字节数据
+            let done = false;
+            while (!done) {
+                const { done: streamDone, value } = await reader.read();
+                done = streamDone;
+
+                if (value) {
+                    const chunk = decoder.decode(value, { stream: true });
+                    console.log(chunk);
+                }
+            }
+            console.log('File read complete');
+        }
+        fetchAndPrintFile("file2");
+        fetchAndPrintFile("file1");
+    </script>
+</body>
+
+</html>
