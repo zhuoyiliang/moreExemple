@@ -24,6 +24,7 @@
             max-height: 400px;
             object-fit: contain;
             display: block;
+            user-select: none;
         }
 
         #draggableSquare {
@@ -34,8 +35,7 @@
             position: absolute;
             cursor: drag;
             top: 0;
-            /* left: 0; */
-            right: 0;
+            left: 0;
             box-sizing: border-box;
         }
 
@@ -48,7 +48,7 @@
 
 <body>
     <div id="imageContainer">
-        <img id="imagePreview" alt="Image Preview" />
+        <img id="imagePreview" alt="Image Preview" draggable="false" />
         <div id="draggableSquare"></div>
     </div>
 
@@ -80,6 +80,9 @@
             const imgURL = URL.createObjectURL(file);
             imagePreview.src = imgURL;
             imageContainer.style.display = 'block';
+            setTimeout(()=>{
+                drawToCanvas();
+            }, 500)
         });
 
         square.addEventListener('mousedown', function (e) {
@@ -114,7 +117,7 @@
             square.style.top = newY + 'px';
 
             // 在拖动过程中实时绘制到 canvas
-            drawToCanvas(newX, newY);
+            drawToCanvas();
         }
 
         function stopMoving() {
@@ -122,8 +125,8 @@
             document.removeEventListener('mousemove', moveSquare);
             document.removeEventListener('mouseup', stopMoving);
         }
-        
-        function drawToCanvas(newX, newY) {
+
+        function drawToCanvas() {
             const squareRect = draggableSquare.getBoundingClientRect();
             const imageRect = imagePreview.getBoundingClientRect();
 
