@@ -31,11 +31,15 @@
             width: 40px;
             height: 40px;
             background-color: rgba(255, 255, 255, 0);
-            border: 2px dashed #4a90e2;
+            border: 2px dashed #ea5e8c;
             position: absolute;
             cursor: drag;
             top: 0;
             left: 0;
+            /* top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); */
+            visibility: hidden;
             box-sizing: border-box;
         }
 
@@ -81,6 +85,13 @@
             imagePreview.src = imgURL;
             imageContainer.style.display = 'block';
             setTimeout(()=>{
+                const containerRect = container.getBoundingClientRect();
+                const squareRect = square.getBoundingClientRect();
+                const centerX = (containerRect.width - squareRect.width) / 2;
+                const centerY = (containerRect.height - squareRect.height) / 2;
+                square.style.visibility = 'visible';
+                square.style.left = centerX + 'px';
+                square.style.top = centerY + 'px';
                 drawToCanvas();
             }, 500)
         });
@@ -90,6 +101,7 @@
             offsetX = e.clientX - square.getBoundingClientRect().left;
             offsetY = e.clientY - square.getBoundingClientRect().top;
             isDragging = true;
+            console.log(offsetX, offsetY);
 
             // 添加鼠标移动和鼠标释放事件
             document.addEventListener('mousemove', moveSquare);
@@ -115,6 +127,7 @@
             // 设置新的位置
             square.style.left = newX + 'px';
             square.style.top = newY + 'px';
+            console.log(newX, newY);
 
             // 在拖动过程中实时绘制到 canvas
             drawToCanvas();
