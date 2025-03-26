@@ -39,38 +39,7 @@ const server = new Server({
     },
 });
 
-// 添加一个工具函数来转换 Web Request 为 Node.js IncomingMessage
-function webRequestToIncomingMessage(webRequest) {
-    // 创建一个新的 IncomingMessage 对象
-    const Duplex = require('stream').Duplex;
-    const incomingMessage = new Duplex();
-
-    // 复制请求方法和 URL
-    incomingMessage.method = webRequest.method;
-    incomingMessage.url = webRequest.url;
-
-    // 复制 headers
-    incomingMessage.headers = {};
-    for (const [key, value] of webRequest.headers.entries()) {
-        incomingMessage.headers[key.toLowerCase()] = value;
-    }
-
-    // 处理请求体
-    if (webRequest.body) {
-        const readable = Readable.from(webRequest.body);
-        readable.pipe(incomingMessage);
-    }
-
-    return incomingMessage;
-}
-
 uploadApp.all("*", async (req, res) => {
-    // 如果是 Next.js 的 Web Request
-    if (req.constructor.name === 'Request') {
-        const nodeRequest = webRequestToIncomingMessage(req);
-        return server.handle(nodeRequest, res);
-    }
-    // 如果已经是 Node.js request（比如在普通 Express 环境中）
     return server.handle(req, res);
 });
 
