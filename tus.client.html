@@ -40,7 +40,7 @@
                     return;
                 }
                 const upload = new tus.Upload(file, {
-                    endpoint: "http://localhost:3000/uploads",
+                    endpoint: "http://localhost:1080/uploads",
                     metadata: {
                         filename: file.name,
                         filetype: file.type,

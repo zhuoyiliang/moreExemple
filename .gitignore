@@ -4,6 +4,8 @@ node_modules/
 # my-app files
 my-app/files/**
 
+*.mp4
+
 
 # Logs
 logs
