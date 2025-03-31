@@ -6,6 +6,11 @@ my-app/files/**
 
 *.mp4
 
+# vuep files
+vuep/node_modules/
+vuep/public/dist
+vuep/.env.local
+
 
 # Logs
 logs

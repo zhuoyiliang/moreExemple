@@ -6,13 +6,9 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --color-amber-50: oklch(0.987 0.022 95.277);
     --color-gray-100: oklch(0.967 0.003 264.542);
     --color-white: #fff;
     --spacing: 0.25rem;
-    --text-3xl: 1.875rem;
-    --text-3xl--line-height: calc(2.25 / 1.875);
-    --font-weight-bold: 700;
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
   }
@@ -163,8 +159,14 @@
   .visible {
     visibility: visible;
   }
+  .absolute {
+    position: absolute;
+  }
   .fixed {
     position: fixed;
+  }
+  .relative {
+    position: relative;
   }
   .sticky {
     position: sticky;
@@ -208,17 +210,11 @@
   .ml-64 {
     margin-left: calc(var(--spacing) * 64);
   }
-  .box-border {
-    box-sizing: border-box;
-  }
   .block {
     display: block;
   }
   .flex {
     display: flex;
-  }
-  .grid {
-    display: grid;
   }
   .hidden {
     display: none;
@@ -229,14 +225,14 @@
   .h-12 {
     height: calc(var(--spacing) * 12);
   }
+  .h-96 {
+    height: calc(var(--spacing) * 96);
+  }
+  .h-\[336px\] {
+    height: 336px;
+  }
   .h-\[2000px\] {
     height: 2000px;
-  }
-  .h-\[2000x\] {
-    height: 2000x;
-  }
-  .h-\[calc\(100vh-48px\)\] {
-    height: calc(100vh - 48px);
   }
   .h-full {
     height: 100%;
@@ -247,8 +243,11 @@
   .w-64 {
     width: calc(var(--spacing) * 64);
   }
-  .w-\[200px\] {
-    width: 200px;
+  .w-96 {
+    width: calc(var(--spacing) * 96);
+  }
+  .w-\[2000px\] {
+    width: 2000px;
   }
   .w-fit {
     width: fit-content;
@@ -265,12 +264,6 @@
   .shrink-0 {
     flex-shrink: 0;
   }
-  .flex-grow {
-    flex-grow: 1;
-  }
-  .grow {
-    flex-grow: 1;
-  }
   .border-collapse {
     border-collapse: collapse;
   }
@@ -280,32 +273,20 @@
   .resize {
     resize: both;
   }
-  .grid-cols-1 {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
-  .grid-rows-1 {
-    grid-template-rows: repeat(1, minmax(0, 1fr));
-  }
   .flex-col {
     flex-direction: column;
   }
-  .gap-1 {
-    gap: calc(var(--spacing) * 1);
-  }
-  .gap-2 {
-    gap: calc(var(--spacing) * 2);
+  .flex-wrap {
+    flex-wrap: wrap;
   }
   .overflow-auto {
     overflow: auto;
   }
-  .overflow-hidden {
-    overflow: hidden;
-  }
   .overflow-x-auto {
     overflow-x: auto;
   }
-  .overflow-x-hidden {
-    overflow-x: hidden;
+  .overflow-y-auto {
+    overflow-y: auto;
   }
   .border {
     border-style: var(--tw-border-style);
@@ -322,40 +303,8 @@
   .border-gray-100 {
     border-color: var(--color-gray-100);
   }
-  .bg-amber-50 {
-    background-color: var(--color-amber-50);
-  }
-  .bg-gray-100 {
-    background-color: var(--color-gray-100);
-  }
   .bg-white {
     background-color: var(--color-white);
-  }
-  .p-1 {
-    padding: calc(var(--spacing) * 1);
-  }
-  .p-2 {
-    padding: calc(var(--spacing) * 2);
-  }
-  .p-8 {
-    padding: calc(var(--spacing) * 8);
-  }
-  .pt-12 {
-    padding-top: calc(var(--spacing) * 12);
-  }
-  .pr-0 {
-    padding-right: calc(var(--spacing) * 0);
-  }
-  .pl-64 {
-    padding-left: calc(var(--spacing) * 64);
-  }
-  .text-3xl {
-    font-size: var(--text-3xl);
-    line-height: var(--tw-leading, var(--text-3xl--line-height));
-  }
-  .font-bold {
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
   }
   .underline {
     text-decoration-line: underline;
@@ -367,6 +316,36 @@
   .outline {
     outline-style: var(--tw-outline-style);
     outline-width: 1px;
+  }
+  .lg\:mt-12 {
+    @media (width >= 64rem) {
+      margin-top: calc(var(--spacing) * 12);
+    }
+  }
+  .lg\:ml-64 {
+    @media (width >= 64rem) {
+      margin-left: calc(var(--spacing) * 64);
+    }
+  }
+  .lg\:block {
+    @media (width >= 64rem) {
+      display: block;
+    }
+  }
+  .lg\:h-12 {
+    @media (width >= 64rem) {
+      height: calc(var(--spacing) * 12);
+    }
+  }
+  .xl\:ml-64 {
+    @media (width >= 80rem) {
+      margin-left: calc(var(--spacing) * 64);
+    }
+  }
+  .xl\:block {
+    @media (width >= 80rem) {
+      display: block;
+    }
   }
 }
 @property --tw-rotate-x {
@@ -398,10 +377,6 @@
   syntax: "*";
   inherits: false;
   initial-value: solid;
-}
-@property --tw-font-weight {
-  syntax: "*";
-  inherits: false;
 }
 @property --tw-shadow {
   syntax: "*";
