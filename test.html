@@ -6,31 +6,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="./output.css" />
+    <style>
+         .transition-grid {
+            transition: grid-template-rows 0.3s;
+        }
+        /* .grid{
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: .3s;
+            overflow: hidden;
+            }
+            .grid>div{
+            min-height: 0;
+            } */
+            /* .wrap:hover .grid{
+                grid-template-rows: 1fr;
+            } */
+
+    </style>
 </head>
 
 <body>
     <div class="h-screen w-screen">
-        <header class="hidden lg:block h-12 w-full shrink-0 border-gray-100 border-b shadow-sm bg-white fixed top-0 left-0 right-0">
+        <!-- <header class="hidden lg:block h-12 w-full shrink-0 border-gray-100 border-b shadow-sm bg-white fixed top-0 left-0 right-0">
             header
         </header>
         <div class="lg:mt-12 flex ">
             <nav class="lg:block hidden h-screen fixed left-0 top-12 bottom-0 w-64 border border-gray-100 border-r">sidebar</nav>
-            <div class="lg:ml-64">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Impedit perspiciatis eligendi aut consectetur sit
-                itaque eius
-                velit? Similique quisquam, ipsum sed quas sequi eaque aliquam fugit? Ea et pariatur exercitationem? Lorem
-                ipsum dolor
-                sit amet consectetur, adipisicing elit. Impedit perspiciatis eligendi aut consectetur sit itaque eius velit?
-                Similique
-                quisquam, ipsum sed quas sequi eaque aliquam fugit? Ea et pariatur exercitationem? Lorem ipsum dolor sit
-                amet
-                consectetur, adipisicing elit. Impedit perspiciatis eligendi aut consectetur sit itaque eius velit?
-                Similique quisquam,
-                ipsum sed quas sequi eaque aliquam fugit? Ea et pariatur exercitationem?
-            </div>
+            <div class="lg:ml-64"> -->
+                <div class="wrap">
+                    <button class="trigger">xxx</button>
+                    <div class="grid">
+                      <div><p>欢迎关注前端侦探，这里有一些有趣的、你可能不知道的HTML、CSS、JS小技巧技巧，比如这篇文章，如何让 auto height 支持过渡动画？一起看看吧</p></div>
+                    </div>
+                  </div>
+            <!-- </div>
         </div>
     </div>
-    </div>
+    </div> -->
 </body>
 
 </html>

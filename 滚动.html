@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Element.scrollIntoView 示例</title>
+    <style>
+        .container {
+            height: 300px;
+            overflow: auto;
+            border: 2px solid #333;
+            margin: 20px;
+        }
+        .box {
+            height: 200px;
+            margin: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            display: block;
+            margin: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button onclick="scrollToElement('red', true)">滚动到红色 (即时)</button>
+        <button onclick="scrollToElement('red', false)">滚动到红色 (平滑)</button>
+        <button onclick="scrollToElement('blue', true)">滚动到蓝色 (即时)</button>
+        <button onclick="scrollToElement('blue', false)">滚动到蓝色 (平滑)</button>
+        <button onclick="scrollToElement('green', true)">滚动到绿色 (即时)</button>
+        <button onclick="scrollToElement('green', false)">滚动到绿色 (平滑)</button>
+    </div>
+
+    <div class="container">
+        <div id="red" class="box" style="background-color: #ff4444;">红色元素</div>
+        <div id="blue" class="box" style="background-color: #4444ff;">蓝色元素</div>
+        <div id="green" class="box" style="background-color: #44aa44;">绿色元素</div>
+        <div class="box" style="background-color: #aa44aa;">紫色元素</div>
+        <div class="box" style="background-color: #ffaa44;">橙色元素</div>
+    </div>
+
+    <script>
+        function scrollToElement(id, instant) {
+            const element = document.getElementById(id);
+            element.scrollIntoView({
+                behavior: instant ? 'instant' : 'smooth',
+                block: 'center'
+            });
+        }
+    </script>
+</body>
+</html>

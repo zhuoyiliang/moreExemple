@@ -47,6 +47,7 @@ uploadApp.all("*", async (req, res) => {
 app.use("/uploads", uploadApp);
 
 app.get("/", (req, res) => {
+    console.count("req");
     res.send("Hello World!");
 });
 

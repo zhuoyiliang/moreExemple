@@ -7,7 +7,7 @@ import App from './App.vue'
 import router from './router'
 
 const app = createApp(App)
-
+app.config.globalProperties.$myProperty = 'Hello, World!';
 app.use(createPinia())
 app.use(router)
 
